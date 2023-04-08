@@ -1,5 +1,6 @@
 package article;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -7,6 +8,8 @@ public class Main {
 		System.out.println("== 게시만 판들기 시작");
 		Scanner sc = new Scanner(System.in);
 		int lastArticleId = 0;
+		int num = 0;
+		ArrayList nums = new ArrayList();
 		
 		while(true) {
 			System.out.print("명령어 : ");
@@ -31,8 +34,20 @@ public class Main {
 				System.out.printf("%d번째 글이 생성되었습니다.%n", id);
 				System.out.printf("제목 : %s%n", title);
 				System.out.printf("내용 : %s%n", body);
+			}
+			else if (command.equals("num")) {
+				System.out.printf("번호 : ");
+				num = sc.nextInt();
+				sc.nextLine();
+				nums.add(num);
 				
-			}else {
+			}
+			else if (command.equals("nums")) {
+				for(int i = 0 ; i < nums.size(); i++) {
+					System.out.printf("번호는 %d%n", nums.get(i));
+				}
+			}
+			else {
 				System.out.println("잘못된 명령어입니다.");
 			}
 		}
