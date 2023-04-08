@@ -10,6 +10,7 @@ public class Main {
 		int lastArticleId = 0;
 		int num = 0;
 		ArrayList nums = new ArrayList();
+		ArrayList <Article> article = new ArrayList();
 		
 		while(true) {
 			System.out.print("명령어 : ");
@@ -55,4 +56,7 @@ public class Main {
 		System.out.println("== 게시판 만들기 종료 ==");;
 	}
 
+}
+class Article{
+	
 }
