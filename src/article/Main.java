@@ -40,29 +40,34 @@ public class Main {
 				String title = sc.nextLine();
 				System.out.printf("내용 : ");
 				String body = sc.nextLine();
-				Article article = new Article(id, title, body);
+				String regDate = Util.getRegDate();
+				Article article = new Article(id, title, body, regDate);
 				articles.add(article);
-								
 				System.out.printf("%d번째 글이 생성되었습니다.%n", id);
 				System.out.printf("제목 : %s%n", title);
 				System.out.printf("내용 : %s%n", body);
 			}else if(command.startsWith("article detail")) {
-				String[] commandBits = command.split(" ");
-				int detailId = Integer.parseInt(commandBits[2]);
-				boolean found = false;
-				for(int i = 0 ; i < articles.size(); i++) {
-					if (detailId == articles.get(i).id) {
-						found = true;
-						Article foundArticle = articles.get(i);
-						System.out.printf("번호 : %d%n", foundArticle.id);
-						System.out.printf("제목 : %s%n", foundArticle.title);
-						System.out.printf("내 : %s%n", foundArticle.body);
-						break;
+				try {
+					String[] commandBits = command.split(" ");
+					int detailId = Integer.parseInt(commandBits[2]);
+					boolean found = false;
+					for(int i = 0 ; i < articles.size(); i++) {
+						if (detailId == articles.get(i).id) {
+							found = true;
+							Article foundArticle = articles.get(i);
+							System.out.printf("번호 : %d%n", foundArticle.id);
+							System.out.printf("제목 : %s%n", foundArticle.title);
+							System.out.printf("내용 : %s%n", foundArticle.body);
+							System.out.printf("등록 시간 : %s%n", foundArticle.regDate);
+							break;
+						}
+						
+					}if (found == false) {
+						System.out.println("게시물을 찾을 수 없습니다.");
+						
 					}
-					
-				}if (found == false) {
-					System.out.println("게시물을 찾을 수 없습니다.");
-					
+				}catch (ArrayIndexOutOfBoundsException e) {
+					System.out.println("잘못된 명령어로 인한 오류입니다. article detail [NO] 를 입혁해주세요");
 				}
 				
 
@@ -89,11 +94,13 @@ class Article {
 	int id;
 	String title;
 	String body;
+	String regDate;
 
-	public Article(int id, String title, String body) {
+	public Article(int id, String title, String body, String regDate) {
 		this.id = id;
 		this.title = title;
 		this.body = body;
+		this.regDate = regDate;
 	}
 
 }
