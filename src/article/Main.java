@@ -53,15 +53,16 @@ public class Main {
 				for(int i = 0 ; i < articles.size(); i++) {
 					if (detailId == articles.get(i).id) {
 						found = true;
+						Article foundArticle = articles.get(i);
+						System.out.printf("번호 : %d%n", foundArticle.id);
+						System.out.printf("제목 : %s%n", foundArticle.title);
+						System.out.printf("내 : %s%n", foundArticle.body);
+						break;
 					}
-				}
-				if(found == false) {
-					System.out.println("게시물이 존재하지 않습니다.");
-				}else {
-					System.out.printf("%d 번 게시물이 존재합니다.", detailId);
-					System.out.printf("번호 : %d%n", articles.get(detailId).id);
-					System.out.printf("제목 : %d%n", articles.get(detailId).title);
-					System.out.printf("내 : %d%n", articles.get(detailId).body);
+					
+				}if (found == false) {
+					System.out.println("게시물을 찾을 수 없습니다.");
+					
 				}
 				
 
