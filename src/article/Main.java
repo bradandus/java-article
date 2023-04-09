@@ -25,9 +25,9 @@ public class Main {
 				if (articles.size() == 0) {
 					System.out.println("등록된 게시물이 없습니다.");
 				} else {
-					System.out.println("번호 | 제목");
+					System.out.println("번호 | 제목         | 작성/수정일             | 조회수 ");
 					for (int i = 0; i < articles.size(); i++) {
-						System.out.printf("%d  | %s %n", articles.get(i).id, articles.get(i).title);
+						System.out.printf("%2d  | %10s | %s | %d%n", articles.get(i).id, articles.get(i).title, articles.get(i).regDate, articles.get(i).hit);
 
 					}
 				}
@@ -58,6 +58,8 @@ public class Main {
 							System.out.printf("제목 : %s%n", foundArticle.title);
 							System.out.printf("내용 : %s%n", foundArticle.body);
 							System.out.printf("등록 시간 : %s%n", foundArticle.regDate);
+							articles.get(i).increasHit();
+							System.out.printf("조회수 : %d%n", foundArticle.hit);
 							break;
 						}
 
@@ -131,12 +133,18 @@ class Article {
 	String title;
 	String body;
 	String regDate;
+	int hit;
 
+	
 	public Article(int id, String title, String body, String regDate) {
 		this.id = id;
 		this.title = title;
 		this.body = body;
 		this.regDate = regDate;
+		this.hit = 0;
+	}
+	public void increasHit() {
+		hit++;
 	}
 
 }
