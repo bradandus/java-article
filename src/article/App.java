@@ -27,15 +27,29 @@ public class App{
 			if (command.equals("exit")) {
 				System.out.println("== 프로그램 종료 ==");
 				break;
-			} else if (command.equals("article list")) {
+			} else if (command.startsWith("article list")) {
 				System.out.println("게시물리스트 보기입니다.");
 				if (articles.size() == 0) {
 					System.out.println("등록된 게시물이 없습니다.");
+					continue;
 				} else {
+					String searchKeyword = command.substring("article.list".length()).trim();
+					System.out.println("검색어 : "+ searchKeyword);
+					List<Article> forListArticle = articles; // 전체 리스트 복
+					if(searchKeyword.length() > 0) { // 검색어가 있다면;
+						forListArticle = new ArrayList<>(); // 검색어가 없으면 초기
+						for(Article article : articles) {
+							if (article.title.contains(searchKeyword) ) {
+								forListArticle.add(article);// 검색어가 있는거만 계속 애
+							}
+						}
+					}else {
+						System.out.println("검색 결과가 없니다. 전체 리스트를 보여줍니다.");
+					}
 					System.out.println("번호 | 제목         | 작성/수정일           | 조회수 ");
-					for (int i = 0; i < articles.size(); i++) {
-						System.out.printf("%2d  | %10s | %s | %d%n", articles.get(i).id, articles.get(i).title,
-								articles.get(i).regDate, articles.get(i).hit);
+					for (int i = 0; i < forListArticle.size(); i++) {
+						System.out.printf("%2d  | %10s | %s | %d%n", forListArticle.get(i).id, forListArticle.get(i).title,
+								forListArticle.get(i).regDate, forListArticle.get(i).hit);
 
 					}
 				}
