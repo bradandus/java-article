@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
+	static ArrayList<Article> articles = new ArrayList<Article>();
+	static int lastArticleId = 0;
+	static Scanner sc = new Scanner(System.in);
 	public static void main(String[] args) {
-		System.out.println("== 게시만 판들기 시작");
-		Scanner sc = new Scanner(System.in);
-		int lastArticleId = 0;
-		ArrayList<Article> articles = new ArrayList<Article>();
+		System.out.println("== 게시만 만들기 시작");
+		makeTestData();
 
 		while (true) {
 			System.out.print("명령어 : ");
@@ -25,9 +26,10 @@ public class Main {
 				if (articles.size() == 0) {
 					System.out.println("등록된 게시물이 없습니다.");
 				} else {
-					System.out.println("번호 | 제목         | 작성/수정일             | 조회수 ");
+					System.out.println("번호 | 제목         | 작성/수정일           | 조회수 ");
 					for (int i = 0; i < articles.size(); i++) {
-						System.out.printf("%2d  | %10s | %s | %d%n", articles.get(i).id, articles.get(i).title, articles.get(i).regDate, articles.get(i).hit);
+						System.out.printf("%2d  | %10s | %s | %d%n", articles.get(i).id, articles.get(i).title,
+								articles.get(i).regDate, articles.get(i).hit);
 
 					}
 				}
@@ -45,6 +47,7 @@ public class Main {
 				System.out.printf("%d번째 글이 생성되었습니다.%n", id);
 				System.out.printf("제목 : %s%n", title);
 				System.out.printf("내용 : %s%n", body);
+
 			} else if (command.startsWith("article detail")) {
 				try {
 					String[] commandBits = command.split(" ");
@@ -126,6 +129,25 @@ public class Main {
 		;
 	}
 
+	private static void makeTestData() {
+		// TODO Auto-generated method stub
+		System.out.println("테스트 데이터 생성");
+		System.out.printf("생성할 게시물 갯수를 입력하세요 : ");
+		int testCount = sc.nextInt();
+		for (int i = 0 ; i < testCount ; i++ ) {
+			int id = lastArticleId + 1;
+			lastArticleId = id;
+			String title = "testTitle No."+id;
+			String body = "testBody No."+id;
+			String regDate = Util.getRegDate();
+			Article article = new Article(id, title, body, regDate);
+			articles.add(article);
+			System.out.printf("%d번째 글이 생성되었습니다.%n", id);
+			System.out.printf("제목 : %s%n", title);
+			System.out.printf("내용 : %s%n", body);
+			}
+		}
+
 }
 
 class Article {
@@ -135,7 +157,6 @@ class Article {
 	String regDate;
 	int hit;
 
-	
 	public Article(int id, String title, String body, String regDate) {
 		this.id = id;
 		this.title = title;
@@ -143,6 +164,7 @@ class Article {
 		this.regDate = regDate;
 		this.hit = 0;
 	}
+
 	public void increasHit() {
 		hit++;
 	}
