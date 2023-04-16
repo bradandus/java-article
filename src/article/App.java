@@ -75,7 +75,7 @@ public class App{
 				
 				Member member = new Member(id, loginId, loginPw, regDate, userName);
 				members.add(member);
-				System.out.printf("%s 번쨰 회원이 가입되었습니다.", id);
+				System.out.printf("%s 번쨰 회원이 가입되었습니다.%n", id);
 				
 			}	else if (command.startsWith("article list")) {
 			
@@ -99,9 +99,17 @@ public class App{
 					}
 					System.out.println("번호 | 제목         | 작성/수정일           | 조회수 ");
 					for (int i = 0; i < forListArticle.size(); i++) {
-						System.out.printf("%2d  | %10s | %s | %d%n", forListArticle.get(i).id, forListArticle.get(i).title,
-								forListArticle.get(i).regDate, forListArticle.get(i).hit);
-
+						System.out.printf("%2d  | %10s | %s | %d%n", forListArticle.get(i).id, forListArticle.get(i).title, forListArticle.get(i).regDate, forListArticle.get(i).hit);
+					}
+				}
+			}else if(command.equals("member list")) {
+				System.out.println("멤버 리스트 보기 입니다.");
+				if(members.size() == 0) {
+					System.out.println("등록된 멤버가 없습니다.");
+				}else {
+					System.out.println("회원번호 |    아이디    |   비밀번호   |   이름   |     등록일");
+					for (int i = 0 ; i < members.size(); i++) {
+						System.out.printf("%4d   | %10s | %10s | %6s | %s%n", members.get(i).id, members.get(i).loginId, members.get(i).loginPw, members.get(i).userName, members.get(i).regDate );
 					}
 				}
 			} else if (command.equals("article write")) {
@@ -196,6 +204,16 @@ public class App{
 			articles.add(article);
 			System.out.printf("%d번째 글이 생성되었습니다.%n", id);
 			}
+		for (int i = 0 ; i < 3 ; i++) {
+			int id = members.size() + 1;
+			String loginId = "member00"+id;
+			String loginPw = "u1234567";
+			String userName = "name00"+id;
+			String regDate = Util.getRegDate();
+			Member member = new Member(id, loginId, loginPw, regDate, userName);
+			members.add(member);
+			System.out.printf("%d번째 회원이 생성되었습니다.%n", id);
+		}
 		}
 	private static Article getArticleById(int id) {
 		for(int i = 0; i < articles.size(); i++) {
