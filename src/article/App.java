@@ -14,6 +14,8 @@ public class App{
 		articles = new ArrayList<>();
 	}
 	private static List<Member> members = new ArrayList<>();
+	private static int lastArticleId = 0;
+	private static int lastMemberId = 0;
 	public static void Start() {
 		System.out.println("== 게시만 만들기 시작");
 		makeTestData();
@@ -30,7 +32,8 @@ public class App{
 				System.out.println("== 프로그램 종료 ==");
 				break;
 			} else if(command.equals("member join")) {
-				int id = members.size() +1;
+				int id = lastMemberId +1;
+				lastMemberId = id;
 				
 				String loginId;
 				String loginPw;
@@ -114,7 +117,8 @@ public class App{
 				}
 			} else if (command.equals("article write")) {
 
-				int id = articles.size() + 1;
+				int id = lastArticleId + 1;
+				lastArticleId = id;
 				System.out.printf("제목 : ");
 				String title = sc.nextLine();
 				System.out.printf("내용 : ");
@@ -160,6 +164,27 @@ public class App{
 				} catch (ArrayIndexOutOfBoundsException e) {
 					System.out.println("잘못된 명령어로 인한 오류입니다. article delete [NO] 를 입혁해주세요");
 				}
+			} else if (command.startsWith("member delete")) {
+				try{
+					String[] commandBits = command.split(" ");
+					String foundId = commandBits[2];
+					System.out.println( foundId);
+					boolean found = false;
+					
+					for (int i = 0; i < members.size(); i++) {
+						if (foundId.equals(members.get(i).loginId)) {
+								members.remove(i);
+								found = true;
+								System.out.printf("%s 멤버 삭제하였습니다.%n", foundId);
+								break;
+							}
+						}
+						if (found == false) {
+							System.out.printf("%s 멤버를 찾을 수 없습니다.%n", foundId);
+						}
+				} catch (ArrayIndexOutOfBoundsException e) {
+					System.out.println("잘못된 명령어로 인한 오류입니다. member delete loginId 를 입혁해주세요");
+				}
 			} else if (command.startsWith("article modify")) {
 				String[] commandBits = command.split(" ");
 				int id = Integer.parseInt(commandBits[2]);
@@ -175,6 +200,42 @@ public class App{
 					foundArticle.regDate = Util.getRegDate();
 					System.out.printf("%d 게시물이 수정 완료 되었습니다.%n", id);
 					
+				}
+			} else if (command.startsWith("member modify")) {
+				String[] commandBits = command.split(" ");
+				String foundId = commandBits[2];
+				Member foundMember = null;
+				for(int i = 0 ; i < members.size(); i++) {
+					if (foundId.equals(members.get(i).loginId)) {
+						System.out.printf("%s 아이디의 멤버를 찾았습니다.%n", foundId);
+						foundMember = members.get(i);
+				
+						String loginPw;
+						String confirmPw;
+					
+						while(true) {
+							System.out.printf("변경할 비밀번호 : ");
+							loginPw = sc.nextLine();
+							if(loginPw.length() < 8) {
+								System.out.println("비밀번호는 8글자 이상 입력해주세요.");
+								continue;
+							}
+							System.out.printf("비밀번호 확인 : ");
+							confirmPw = sc.nextLine();
+							if(loginPw.equals(confirmPw)){
+							
+								break;
+							}else {
+								System.out.println("같은 비밀번호를 입력해주세요");
+								continue;
+							}
+							
+						}
+
+						foundMember.loginPw = loginPw;
+						System.out.printf("%s 멤버의 정보를 수정 완료 되었습니다.%n", foundId);
+					}
+				
 				}
 			} else {
 				System.out.println("잘못된 명령어입니다.");
@@ -196,7 +257,7 @@ public class App{
 	private static void makeTestData() {
 		// TODO Auto-generated method stub
 		for (int i = 0 ; i < 3 ; i++ ) {
-			int id = articles.size() + 1;
+			int id = lastArticleId + 1;
 			String title = "testTitle No."+id;
 			String body = "testBody No."+id;
 			String regDate = Util.getRegDate();
@@ -205,7 +266,8 @@ public class App{
 			System.out.printf("%d번째 글이 생성되었습니다.%n", id);
 			}
 		for (int i = 0 ; i < 3 ; i++) {
-			int id = members.size() + 1;
+			int id = lastMemberId + 1;
+			lastMemberId = id;
 			String loginId = "member00"+id;
 			String loginPw = "u1234567";
 			String userName = "name00"+id;
@@ -214,7 +276,7 @@ public class App{
 			members.add(member);
 			System.out.printf("%d번째 회원이 생성되었습니다.%n", id);
 		}
-		}
+	}
 	private static Article getArticleById(int id) {
 		for(int i = 0; i < articles.size(); i++) {
 			if (articles.get(i).id == id) {
