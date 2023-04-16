@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import article.dto.Article;
+import article.dto.Member;
 import article.util.Util;
 
 public class App{
@@ -12,6 +13,7 @@ public class App{
 	public App() {
 		articles = new ArrayList<>();
 	}
+	private static List<Member> members = new ArrayList<>();
 	public static void Start() {
 		System.out.println("== 게시만 만들기 시작");
 		makeTestData();
@@ -27,7 +29,56 @@ public class App{
 			if (command.equals("exit")) {
 				System.out.println("== 프로그램 종료 ==");
 				break;
-			} else if (command.startsWith("article list")) {
+			} else if(command.equals("member join")) {
+				int id = members.size() +1;
+				
+				String loginId;
+				String loginPw;
+				String confirmPw;
+				
+				
+				while(true) {
+					System.out.printf("아이디 : ");
+					loginId = sc.nextLine();
+					if(loginId.length() < 6) {
+						System.out.println("아이디는 6글자 이상 입력해주세요.");
+						continue;
+					}
+					if(isJoinId(loginId) == false) {
+						System.out.printf("%s는 이미 가입된 아이디입니다.", loginId);
+						continue;
+					}else {
+						break;
+					}
+					
+				}
+				while(true) {
+					System.out.printf("비밀번호 : ");
+					loginPw = sc.nextLine();
+					if(loginPw.length() < 8) {
+						System.out.println("비밀번호는 8글자 이상 입력해주세요.");
+						continue;
+					}
+					System.out.printf("비밀번호 확인 : ");
+					confirmPw = sc.nextLine();
+					if(loginPw.equals(confirmPw)){
+						break;
+					}else {
+						System.out.println("같은 비밀번호를 입력해주세요");
+						continue;
+					}
+					
+				}	
+				System.out.printf("이름 : ");
+				String userName = sc.nextLine();
+				String regDate = Util.getRegDate();
+				
+				Member member = new Member(id, loginId, loginPw, regDate, userName);
+				members.add(member);
+				System.out.printf("%s 번쨰 회원이 가입되었습니다.", id);
+				
+			}	else if (command.startsWith("article list")) {
+			
 				System.out.println("게시물리스트 보기입니다.");
 				if (articles.size() == 0) {
 					System.out.println("등록된 게시물이 없습니다.");
@@ -81,32 +132,6 @@ public class App{
 					System.out.printf("등록 시간 : %s%n", foundArticle.regDate);
 					System.out.printf("조회수 : %d%n", foundArticle.hit);
 				}
-					
-//				try {
-//					String[] commandBits = command.split(" ");
-//					int id = Integer.parseInt(commandBits[2]);
-//					boolean found = false;
-//					for (int i = 0; i < articles.size(); i++) {
-//						if (id == articles.get(i).id) {
-//							found = true;
-//							Article foundArticle = articles.get(i);
-//							System.out.printf("번호 : %d%n", foundArticle.id);
-//							System.out.printf("제목 : %s%n", foundArticle.title);
-//							System.out.printf("내용 : %s%n", foundArticle.body);
-//							System.out.printf("등록 시간 : %s%n", foundArticle.regDate);
-//							articles.get(i).increasHit();
-//							System.out.printf("조회수 : %d%n", foundArticle.hit);
-//							break;
-//						}
-//
-//					}
-//					if (found == false) {
-//						System.out.printf("%d 번 게시물을 찾을 수 없습니다.%n", detailId);
-//
-//					}
-//				} catch (ArrayIndexOutOfBoundsException e) {
-//					System.out.println("잘못된 명령어로 인한 오류입니다. article detail [NO] 를 입혁해주세요");
-//				}
 
 			} else if (command.startsWith("article delete")) {
 				try {
@@ -143,32 +168,6 @@ public class App{
 					System.out.printf("%d 게시물이 수정 완료 되었습니다.%n", id);
 					
 				}
-//				try {
-//					String[] commandBits = command.split(" ");
-//					int id = Integer.parseInt(commandBits[2]);
-//					
-//					boolean found = false;
-//					for (int i = 0; i < articles.size(); i++) {
-//						if (id == articles.get(i).id) {
-//							Article modifyArticle = articles.get(i);
-//							System.out.printf("%d 번 게시물을 찾았습니다.%n", id);
-//							System.out.printf("수정할 제목 : ");
-//							modifyArticle.title = sc.nextLine();
-//							System.out.printf("수정할 내용 : ");
-//							modifyArticle.body = sc.nextLine();
-//							modifyArticle.regDate = Util.getRegDate();
-//							articles.set(i, modifyArticle);
-//							System.out.printf("%d 게시물이 수정 완료 되었습니다.%n", id);
-//							found = true;
-//							break;
-//						}
-//					}
-//					if (found == false) {
-//						System.out.printf("%d 번 게시물을 찾을 수 없습니다.%n", id);
-//					}
-//				} catch (ArrayIndexOutOfBoundsException e) {
-//					System.out.println("잘못된 명령어로 인한 오류입니다. article modify [NO] 를 입혁해주세요");
-//				}
 			} else {
 				System.out.println("잘못된 명령어입니다.");
 			}
@@ -176,6 +175,14 @@ public class App{
 		sc.close();
 		System.out.println("== 게시판 만들기 종료 ==");
 		;
+	}
+
+	private static boolean isJoinId(String loginId) {
+		for (int i = 0; i< members.size(); i++) {
+			if(loginId == members.get(i).loginId) {
+				return false;
+			}
+		}return true;
 	}
 
 	private static void makeTestData() {
