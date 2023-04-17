@@ -24,13 +24,13 @@ public class App{
 		while (true) {
 			System.out.print("명령어 : ");
 			String command = sc.nextLine();
-			command = command.trim(); // 입력받은 값의 공백 무시
-			if (command.length() == 0) {
+			command = command.trim(); // 입력받은 값의 양쪽 끝 공백 무시 id/pw 처리시에 필요
+			if (command.length() == 0) { // 입력어가 없는 경우 명령어 입력 다시 받음
 				continue; // while 문 처음으로 이동
 			}
-			if (command.equals("exit")) {
+			if (command.equals("exit")) { // command 텍스트가 exit와 같다면 true 리턴,
 				System.out.println("== 프로그램 종료 ==");
-				break;
+				break; // while 문 종료
 			} else if(command.equals("member join")) {
 				int id = lastMemberId +1;
 				lastMemberId = id;
