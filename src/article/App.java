@@ -16,7 +16,7 @@ public class App{
 	private static List<Member> members = new ArrayList<>();
 	private static int lastArticleId = 0;
 	private static int lastMemberId = 0;
-	public static void Start() {
+	public void Start() {
 		System.out.println("== 게시만 만들기 시작");
 		makeTestData();
 		Scanner sc = new Scanner(System.in);
@@ -254,7 +254,7 @@ public class App{
 		}return true;
 	}
 
-	private static void makeTestData() {
+	private void makeTestData() {
 		// TODO Auto-generated method stub
 		for (int i = 0 ; i < 3 ; i++ ) {
 			int id = lastArticleId + 1;
@@ -277,7 +277,7 @@ public class App{
 			System.out.printf("%d번째 회원이 생성되었습니다.%n", id);
 		}
 	}
-	private static Article getArticleById(int id) {
+	private Article getArticleById(int id) {
 		for(int i = 0; i < articles.size(); i++) {
 			if (articles.get(i).id == id) {
 				return articles.get(i);
