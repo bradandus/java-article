@@ -91,7 +91,7 @@ public class App{
 					System.out.println("검색어 : "+ searchKeyword);
 					List<Article> forListArticle = articles; // 전체 리스트 복
 					if(searchKeyword.length() > 0) { // 검색어가 있다면;
-						forListArticle = new ArrayList<>(); // 검색어가 없으면 초기
+						forListArticle = new ArrayList<>(); // 검색어가 있으면 한번 초기화
 						for(Article article : articles) {
 							if (article.title.contains(searchKeyword) ) {
 								forListArticle.add(article);// 검색어가 있는거만 계속 애
@@ -135,7 +135,7 @@ public class App{
 				int id = Integer.parseInt(commandBits[2]);
 				Article foundArticle = getArticleById(id);
 				if (foundArticle == null){
-					System.out.printf("%d 번째 게시물을 찾을 수 없습니다.", id);
+					System.out.printf("%d 번째 게시물을 찾을 수 없습니다.%n", id);
 				}else {
 					foundArticle.increasHit();
 					System.out.printf("번호 : %d%n", foundArticle.id);
@@ -146,24 +146,17 @@ public class App{
 				}
 
 			} else if (command.startsWith("article delete")) {
-				try {
-					String[] commandBits = command.split(" ");
-					int id = Integer.parseInt(commandBits[2]);
-					boolean found = false;
-					for (int i = 0; i < articles.size(); i++) {
-						if (id == articles.get(i).id) {
-							articles.remove(i);
-							found = true;
-							System.out.printf("%d 번 게시물을 삭제하였습니다.%n", id);
-							break;
-						}
-					}
-					if (found == false) {
-						System.out.printf("%d 번 게시물을 찾을 수 없습니다.%n", id);
-					}
-				} catch (ArrayIndexOutOfBoundsException e) {
-					System.out.println("잘못된 명령어로 인한 오류입니다. article delete [NO] 를 입혁해주세요");
+				String[] commandBits = command.split(" ");
+				int id = Integer.parseInt(commandBits[2]);
+				int foundIndex = -1;
+				foundIndex = foundById(id);
+				if (foundIndex == -1) {
+					System.out.printf("%d 번 게시물을 찾을 수 없습니다.%n", id);
+				}else {
+					articles.remove(foundIndex);
+					System.out.printf("%d 번 게시물을 삭제했습니다.%n", id);
 				}
+				
 			} else if (command.startsWith("member delete")) {
 				try{
 					String[] commandBits = command.split(" ");
@@ -246,6 +239,16 @@ public class App{
 		;
 	}
 
+	private int foundById(int id) {
+		// TODO Auto-generated method stub
+		for (int i = 0; i < articles.size(); i++) {
+			if (id == articles.get(i).id) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	private static boolean isJoinId(String loginId) {
 		for (int i = 0; i< members.size(); i++) {
 			if(loginId == members.get(i).loginId) {
@@ -258,6 +261,7 @@ public class App{
 		// TODO Auto-generated method stub
 		for (int i = 0 ; i < 3 ; i++ ) {
 			int id = lastArticleId + 1;
+			lastArticleId = id;
 			String title = "testTitle No."+id;
 			String body = "testBody No."+id;
 			String regDate = Util.getRegDate();
@@ -278,9 +282,9 @@ public class App{
 		}
 	}
 	private Article getArticleById(int id) {
-		for(int i = 0; i < articles.size(); i++) {
-			if (articles.get(i).id == id) {
-				return articles.get(i);
+		for(Article article : articles) {
+			if (article.id == id) {
+				return article;
 			}
 		}
 		return null;
