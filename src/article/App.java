@@ -89,7 +89,7 @@ public class App{
 				} else {
 					String searchKeyword = command.substring("article.list".length()).trim();
 					System.out.println("검색어 : "+ searchKeyword);
-					List<Article> forListArticle = articles; // 전체 리스트 복
+					List<Article> forListArticle = articles; // 전체 리스트 복제
 					if(searchKeyword.length() > 0) { // 검색어가 있다면;
 						forListArticle = new ArrayList<>(); // 검색어가 있으면 한번 초기화
 						for(Article article : articles) {
@@ -97,10 +97,15 @@ public class App{
 								forListArticle.add(article);// 검색어가 있는거만 계속 애
 							}
 						}
+						if (forListArticle.size() == 0) {
+							System.out.println("일치하는 검색결과가 없습니다.");
+							System.out.println("전체 리스트를 보여줍니다.");
+							forListArticle = articles; // 다시 전체 덮어씌우기
+						}
 					}else {
-						System.out.println("검색 결과가 없니다. 전체 리스트를 보여줍니다.");
+						System.out.println("검색어가 없습니다. 전체 리스트를 보여줍니다.");
 					}
-					System.out.println("번호 | 제목         | 작성/수정일           | 조회수 ");
+					System.out.println("번호  |       제목       |        작성/수정일      | 조회수 ");
 					for (int i = 0; i < forListArticle.size(); i++) {
 						System.out.printf("%2d  | %10s | %s | %d%n", forListArticle.get(i).id, forListArticle.get(i).title, forListArticle.get(i).regDate, forListArticle.get(i).hit);
 					}
