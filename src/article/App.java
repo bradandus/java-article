@@ -148,8 +148,7 @@ public class App{
 			} else if (command.startsWith("article delete")) {
 				String[] commandBits = command.split(" ");
 				int id = Integer.parseInt(commandBits[2]);
-				int foundIndex = -1;
-				foundIndex = foundById(id);
+				int foundIndex = getArticleIndexById(id);
 				if (foundIndex == -1) {
 					System.out.printf("%d 번 게시물을 찾을 수 없습니다.%n", id);
 				}else {
@@ -161,7 +160,7 @@ public class App{
 				try{
 					String[] commandBits = command.split(" ");
 					String foundId = commandBits[2];
-					System.out.println( foundId);
+					System.out.println(foundId);
 					boolean found = false;
 					
 					for (int i = 0; i < members.size(); i++) {
@@ -238,14 +237,22 @@ public class App{
 		System.out.println("== 게시판 만들기 종료 ==");
 		;
 	}
-
-	private int foundById(int id) {
-		// TODO Auto-generated method stub
-		for (int i = 0; i < articles.size(); i++) {
-			if (id == articles.get(i).id) {
+	private Article getArticleById(int id) {
+		int index = getArticleIndexById(id);
+		if (index != -1) { // 일치하는 index가 있는 경우 (-1은 찾지 못한 경우)
+			return articles.get(index);
+		}
+		return null;
+	}
+	private int getArticleIndexById(int id) {
+		int i = 0;
+		for (Article article : articles) {
+			if (article.id == id) {
 				return i;
 			}
+			i++;
 		}
+		
 		return -1;
 	}
 
@@ -281,13 +288,6 @@ public class App{
 			System.out.printf("%d번째 회원이 생성되었습니다.%n", id);
 		}
 	}
-	private Article getArticleById(int id) {
-		for(Article article : articles) {
-			if (article.id == id) {
-				return article;
-			}
-		}
-		return null;
-	}
+
 
 }
