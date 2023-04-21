@@ -10,10 +10,13 @@ import article.util.Util;
 
 public class App{
 	private static List<Article> articles;
+	private static List<Member> members;
 	public App() {
 		articles = new ArrayList<>();
+		members = new ArrayList<>();
 	}
-	private static List<Member> members = new ArrayList<>();
+	
+	
 	private static int lastArticleId = 0;
 	private static int lastMemberId = 0;
 	public void Start() {
@@ -31,6 +34,8 @@ public class App{
 			if (command.equals("exit")) { // command 텍스트가 exit와 같다면 true 리턴,
 				System.out.println("== 프로그램 종료 ==");
 				break; // while 문 종료
+				
+				
 			} else if(command.equals("member join")) {
 				int id = lastMemberId +1;
 				lastMemberId = id;
@@ -38,17 +43,19 @@ public class App{
 				String loginId;
 				String loginPw;
 				String confirmPw;
+				String regDate = Util.getRegDate();
 				
 				
 				while(true) {
 					System.out.printf("아이디 : ");
 					loginId = sc.nextLine();
-					if(loginId.length() < 6) {
-						System.out.println("아이디는 6글자 이상 입력해주세요.");
+					
+					if(isJoinableLoginId(loginId) == false) {
+						System.out.printf("%s는 이미 가입된 아이디입니다.", loginId);
 						continue;
 					}
-					if(isJoinId(loginId) == false) {
-						System.out.printf("%s는 이미 가입된 아이디입니다.", loginId);
+					if(loginId.length() < 6) {
+						System.out.println("아이디는 6글자 이상 입력해주세요.");
 						continue;
 					}else {
 						break;
@@ -74,11 +81,10 @@ public class App{
 				}	
 				System.out.printf("이름 : ");
 				String userName = sc.nextLine();
-				String regDate = Util.getRegDate();
-				
+					
 				Member member = new Member(id, loginId, loginPw, regDate, userName);
 				members.add(member);
-				System.out.printf("%s 번쨰 회원이 가입되었습니다.%n", id);
+				System.out.printf("%s 번째 회원이 가입되었습니다.%n", id);
 				
 			}	else if (command.startsWith("article list")) {
 			
@@ -115,9 +121,9 @@ public class App{
 				if(members.size() == 0) {
 					System.out.println("등록된 멤버가 없습니다.");
 				}else {
-					System.out.println("회원번호 |    아이디    |   비밀번호   |   이름   |     등록일");
+					System.out.println("회원번호 |    아이디    |   비밀번호   |     이름     |     등록일");
 					for (int i = 0 ; i < members.size(); i++) {
-						System.out.printf("%4d   | %10s | %10s | %6s | %s%n", members.get(i).id, members.get(i).loginId, members.get(i).loginPw, members.get(i).userName, members.get(i).regDate );
+						System.out.printf("%4d   | %10s | %10s | %10s | %s%n", members.get(i).id, members.get(i).loginId, members.get(i).loginPw, members.get(i).userName, members.get(i).regDate );
 					}
 				}
 			} else if (command.equals("article write")) {
@@ -242,6 +248,8 @@ public class App{
 		System.out.println("== 게시판 만들기 종료 ==");
 		;
 	}
+	
+	// 게시물 아이디로 찾기
 	private Article getArticleById(int id) {
 		int index = getArticleIndexById(id);
 		if (index != -1) { // 일치하는 index가 있는 경우 (-1은 찾지 못한 경우)
@@ -249,6 +257,8 @@ public class App{
 		}
 		return null;
 	}
+	
+	// 게시물 아이디로 인덱스 찾기
 	private int getArticleIndexById(int id) {
 		int i = 0;
 		for (Article article : articles) {
@@ -260,13 +270,25 @@ public class App{
 		
 		return -1;
 	}
-
-	private static boolean isJoinId(String loginId) {
-		for (int i = 0; i< members.size(); i++) {
-			if(loginId == members.get(i).loginId) {
-				return false;
+	// 회원 로그인 아이디가 가입되어 있는 회원인지 찾기
+	private boolean isJoinableLoginId(String loginId) {
+		int index = getMemberIndexByLoginId(loginId);
+		if (index == -1) { // 일치하는 index가 없는 경우
+			return true;
+		}
+		return false;
+	}
+	// 회원 로그인 아이디로 인덱스 찾기
+	private int getMemberIndexByLoginId(String loginId) {
+		int i = 0;
+		for (Member member : members) {
+			if (member.loginId.equals(loginId)) {
+				return i;
 			}
-		}return true;
+			i++;
+		}
+		
+		return -1;
 	}
 
 	private void makeTestData() {
