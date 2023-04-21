@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import article.controller.ArticleController;
+import article.controller.MemberController;
 import article.dto.Article;
 import article.dto.Member;
 import article.util.Util;
@@ -17,13 +19,19 @@ public class App{
 	}
 	
 	
-	private static int lastArticleId = 0;
-	private static int lastMemberId = 0;
+	public static int lastArticleId = 0;
+
+
 	public void Start() {
 		System.out.println("== 게시만 만들기 시작");
-		makeTestData();
+	
+		makeTestData(); 
+		
 		Scanner sc = new Scanner(System.in);
-
+		
+		MemberController memberController = new MemberController(sc, members);
+//		ArticleController articleController = new ArticleController();
+		
 		while (true) {
 			System.out.print("명령어 : ");
 			String command = sc.nextLine();
@@ -37,54 +45,7 @@ public class App{
 				
 				
 			} else if(command.equals("member join")) {
-				int id = lastMemberId +1;
-				lastMemberId = id;
-				
-				String loginId;
-				String loginPw;
-				String confirmPw;
-				String regDate = Util.getRegDate();
-				
-				
-				while(true) {
-					System.out.printf("아이디 : ");
-					loginId = sc.nextLine();
-					
-					if(isJoinableLoginId(loginId) == false) {
-						System.out.printf("%s는 이미 가입된 아이디입니다.", loginId);
-						continue;
-					}
-					if(loginId.length() < 6) {
-						System.out.println("아이디는 6글자 이상 입력해주세요.");
-						continue;
-					}else {
-						break;
-					}
-					
-				}
-				while(true) {
-					System.out.printf("비밀번호 : ");
-					loginPw = sc.nextLine();
-					if(loginPw.length() < 8) {
-						System.out.println("비밀번호는 8글자 이상 입력해주세요.");
-						continue;
-					}
-					System.out.printf("비밀번호 확인 : ");
-					confirmPw = sc.nextLine();
-					if(loginPw.equals(confirmPw)){
-						break;
-					}else {
-						System.out.println("같은 비밀번호를 입력해주세요");
-						continue;
-					}
-					
-				}	
-				System.out.printf("이름 : ");
-				String userName = sc.nextLine();
-					
-				Member member = new Member(id, loginId, loginPw, regDate, userName);
-				members.add(member);
-				System.out.printf("%s 번째 회원이 가입되었습니다.%n", id);
+				memberController.doJoin();
 				
 			}	else if (command.startsWith("article list")) {
 			
@@ -270,26 +231,7 @@ public class App{
 		
 		return -1;
 	}
-	// 회원 로그인 아이디가 가입되어 있는 회원인지 찾기
-	private boolean isJoinableLoginId(String loginId) {
-		int index = getMemberIndexByLoginId(loginId);
-		if (index == -1) { // 일치하는 index가 없는 경우
-			return true;
-		}
-		return false;
-	}
-	// 회원 로그인 아이디로 인덱스 찾기
-	private int getMemberIndexByLoginId(String loginId) {
-		int i = 0;
-		for (Member member : members) {
-			if (member.loginId.equals(loginId)) {
-				return i;
-			}
-			i++;
-		}
-		
-		return -1;
-	}
+
 
 	private void makeTestData() {
 		// TODO Auto-generated method stub
@@ -304,8 +246,8 @@ public class App{
 			System.out.printf("%d번째 글이 생성되었습니다.%n", id);
 			}
 		for (int i = 0 ; i < 3 ; i++) {
-			int id = lastMemberId + 1;
-			lastMemberId = id;
+			int id = i +1;
+			MemberController.lastMemberId = id;
 			String loginId = "member00"+id;
 			String loginPw = "u1234567";
 			String userName = "name00"+id;
