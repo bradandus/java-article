@@ -78,15 +78,7 @@ public class App{
 					}
 				}
 			}else if(command.equals("member list")) {
-				System.out.println("멤버 리스트 보기 입니다.");
-				if(members.size() == 0) {
-					System.out.println("등록된 멤버가 없습니다.");
-				}else {
-					System.out.println("회원번호 |    아이디    |   비밀번호   |     이름     |     등록일");
-					for (int i = 0 ; i < members.size(); i++) {
-						System.out.printf("%4d   | %10s | %10s | %10s | %s%n", members.get(i).id, members.get(i).loginId, members.get(i).loginPw, members.get(i).userName, members.get(i).regDate );
-					}
-				}
+				memberController.doList();
 			} else if (command.equals("article write")) {
 
 				int id = lastArticleId + 1;
@@ -129,26 +121,11 @@ public class App{
 				}
 				
 			} else if (command.startsWith("member delete")) {
-				try{
-					String[] commandBits = command.split(" ");
-					String foundId = commandBits[2];
-					System.out.println(foundId);
-					boolean found = false;
-					
-					for (int i = 0; i < members.size(); i++) {
-						if (foundId.equals(members.get(i).loginId)) {
-								members.remove(i);
-								found = true;
-								System.out.printf("%s 멤버 삭제하였습니다.%n", foundId);
-								break;
-							}
-						}
-						if (found == false) {
-							System.out.printf("%s 멤버를 찾을 수 없습니다.%n", foundId);
-						}
-				} catch (ArrayIndexOutOfBoundsException e) {
-					System.out.println("잘못된 명령어로 인한 오류입니다. member delete loginId 를 입혁해주세요");
-				}
+				String[] commandBits = command.split(" ");
+				String foundId = commandBits[2];
+				memberController.doDelete(foundId);
+				
+				
 			} else if (command.startsWith("article modify")) {
 				String[] commandBits = command.split(" ");
 				int id = Integer.parseInt(commandBits[2]);
@@ -168,39 +145,7 @@ public class App{
 			} else if (command.startsWith("member modify")) {
 				String[] commandBits = command.split(" ");
 				String foundId = commandBits[2];
-				Member foundMember = null;
-				for(int i = 0 ; i < members.size(); i++) {
-					if (foundId.equals(members.get(i).loginId)) {
-						System.out.printf("%s 아이디의 멤버를 찾았습니다.%n", foundId);
-						foundMember = members.get(i);
-				
-						String loginPw;
-						String confirmPw;
-					
-						while(true) {
-							System.out.printf("변경할 비밀번호 : ");
-							loginPw = sc.nextLine();
-							if(loginPw.length() < 8) {
-								System.out.println("비밀번호는 8글자 이상 입력해주세요.");
-								continue;
-							}
-							System.out.printf("비밀번호 확인 : ");
-							confirmPw = sc.nextLine();
-							if(loginPw.equals(confirmPw)){
-							
-								break;
-							}else {
-								System.out.println("같은 비밀번호를 입력해주세요");
-								continue;
-							}
-							
-						}
-
-						foundMember.loginPw = loginPw;
-						System.out.printf("%s 멤버의 정보를 수정 완료 되었습니다.%n", foundId);
-					}
-				
-				}
+				memberController.doModify(foundId);
 			} else {
 				System.out.println("잘못된 명령어입니다.");
 			}
