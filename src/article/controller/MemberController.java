@@ -76,56 +76,56 @@ public class MemberController {
 		members.add(member);
 		System.out.printf("%s 번째 회원이 가입되었습니다.%n", id);
 	}
-	public void doDelete(String foundId) {
-		boolean found = false;
-		
-		for (int i = 0; i < members.size(); i++) {
-			if (foundId.equals(members.get(i).loginId)) {
-					members.remove(i);
-					found = true;
-					System.out.printf("%s 멤버 삭제하였습니다.%n", foundId);
-					break;
-			}
-		}
-		if (found == false) {
+	public void doDelete(String command) {
+		String[] commandBits = command.split(" ");
+		String foundId = commandBits[2];
+		int i = -1;
+		i = getMemberIndexByLoginId(foundId);
+		if (i != -1) {
+			members.remove(i);
+			System.out.printf("%s 멤버를 삭제했습니다.%n", foundId);
+		}else {
 			System.out.printf("%s 멤버를 찾을 수 없습니다.%n", foundId);
 		}
 
 	}
-	public void doModify(String foundId) {
+	public void doModify(String command) {
+		String[] commandBits = command.split(" ");
+		String foundId = commandBits[2];
 		Member foundMember = null;
-		for(int i = 0 ; i < members.size(); i++) {
-			if (foundId.equals(members.get(i).loginId)) {
-				System.out.printf("%s 아이디의 멤버를 찾았습니다.%n", foundId);
-				foundMember = members.get(i);
+		int i = -1;
+		i = getMemberIndexByLoginId(foundId);
+		if (i != -1) {
+			foundMember = members.get(i);
+			System.out.printf("%s 아이디의 멤버를 찾았습니다.%n", foundId);
+						
+			String loginPw;
+			String confirmPw;
 		
-				String loginPw;
-				String confirmPw;
-			
-				while(true) {
-					System.out.printf("변경할 비밀번호 : ");
-					loginPw = sc.nextLine();
-					if(loginPw.length() < 8) {
-						System.out.println("비밀번호는 8글자 이상 입력해주세요.");
-						continue;
-					}
-					System.out.printf("비밀번호 확인 : ");
-					confirmPw = sc.nextLine();
-					if(loginPw.equals(confirmPw)){
-					
-						break;
-					}else {
-						System.out.println("같은 비밀번호를 입력해주세요");
-						continue;
-					}
-					
+			while(true) {
+				System.out.printf("변경할 비밀번호 : ");
+				loginPw = sc.nextLine();
+				if(loginPw.length() < 8) {
+					System.out.println("비밀번호는 8글자 이상 입력해주세요.");
+					continue;
 				}
-
-				foundMember.loginPw = loginPw;
-				System.out.printf("%s 멤버의 정보를 수정 완료 되었습니다.%n", foundId);
+				System.out.printf("비밀번호 확인 : ");
+				confirmPw = sc.nextLine();
+				if(loginPw.equals(confirmPw)){
+				
+					break;
+				}else {
+					System.out.println("같은 비밀번호를 입력해주세요");
+					continue;
+				}
 			}
-		
+			foundMember.loginPw = loginPw;
+			System.out.printf("%s멤버의 비밀번호를 업데이트 했습니다.%n", foundId);
+		}else {
+			System.out.printf("%s 멤버를 찾을 수 없습니다.%n", foundId);
 		}
+					
+		
 	}
 	// 회원 로그인 아이디가 가입되어 있는 회원인지 찾기
 		private boolean isJoinableLoginId(String loginId) {
